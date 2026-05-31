@@ -1057,6 +1057,127 @@ body { font-size: 20px; }
 .footer__title { font-size: 32px !important; }
 .footer__sub   { font-size: 17px !important; line-height: 2.0 !important; color: #b8d0e8 !important; }
 
+/* ═══════════════════════════════════════════════
+   DESKTOP LAYOUT (≥ 768px)
+═══════════════════════════════════════════════ */
+@media (min-width: 768px) {
+
+  /* Dark canvas so the centred brochure floats */
+  body { background: #0f1c28; }
+  .brochure { box-shadow: 0 0 100px rgba(0,0,0,0.6); }
+
+  /* ── Max-width: go wide ── */
+  :root { --max-w: 1120px; }
+
+  /* ── Cover ── */
+  .cover__content { padding: 0 64px 72px; }
+  .cover__title   { font-size: clamp(80px, 8.5vw, 128px) !important; }
+
+  /* ── Collage: 3 equal columns ── */
+  .collage {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 320px;
+    height: 320px;
+  }
+  .collage__item:first-child { grid-row: span 1; }
+
+  /* ── Route: taller hero, 4-col accom grid ── */
+  .route-map__img-wrap { height: 380px; }
+  .route-map__info     { padding: 0 32px; }
+  .accom-grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 32px 32px;
+  }
+
+  /* ── Top nav: fill full width ── */
+  .site-nav { max-width: var(--max-w); }
+  .site-nav__links { overflow-x: visible; }
+  .site-nav__link  { font-size: 11px !important; padding: 0 18px; }
+
+  /* ── Day nav: no horizontal scroll, wrap neatly ── */
+  .day-nav {
+    overflow-x: visible;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 18px 40px;
+  }
+  .day-nav-btn {
+    font-size: 13px !important;
+    padding: 10px 22px !important;
+  }
+
+  /* ── Day panel: LEFT photo column + RIGHT schedule column ── */
+  .day-panel.active {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-areas:
+      "hero      sched"
+      "infobar   sched"
+      "photos    sched"
+      "note      sched";
+    grid-template-rows: auto auto auto 1fr;
+    min-height: 580px;
+    align-items: start;
+  }
+  .day-hero     { grid-area: hero;    height: 380px !important; }
+  .day-info-bar { grid-area: infobar; }
+  .day-photos   {
+    grid-area: photos;
+    height: 150px !important;
+    padding: 12px 20px;
+  }
+  .day-photos__item { width: 210px !important; }
+  .elder-note   { grid-area: note; margin: 0 20px 24px; }
+  .day-schedule {
+    grid-area: sched;
+    padding: 24px 20px;
+    background: var(--snow);
+    border-left: 1px solid var(--frost);
+    overflow-y: auto;
+    /* stretch to fill all 4 row slots */
+    align-self: stretch;
+  }
+
+  /* Slightly smaller schedule text so it fits the column */
+  .schedule-item        { font-size: 16px !important; line-height: 1.65 !important; }
+  .schedule-block__header { font-size: 12px !important; padding: 10px 16px !important; }
+  .day-hero__title      { font-size: 30px !important; }
+  .day-hero__meta       { font-size: 14px !important; }
+  .day-info-bar__value  { font-size: 16px !important; }
+
+  /* ── Spring cards: 2-column grid ── */
+  .springs-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .springs-hero     { grid-column: 1 / -1; height: 340px; }
+  .springs-temp-bar { grid-column: 1 / -1; }
+  .spring-card      { margin: 12px 10px; }
+  .spring-card__img { height: 200px; }
+  .spring-card__name { font-size: 26px !important; }
+
+  /* ── What to Expect: 2-column accordion ── */
+  .expect-hero { height: 300px; }
+  .expect-accordion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    padding: 24px 32px 40px;
+  }
+  /* Keep each item self-contained so accordion stays readable */
+  .expect-item__body.open,
+  .expect-item.open .expect-item__body { max-height: 600px; }
+
+  /* ── Section headers: more breathing room ── */
+  .section-header { padding: 40px 40px 20px; }
+  .section-header__title { font-size: 44px !important; }
+
+  /* ── Footer ── */
+  .footer { padding: 48px 48px !important; }
+  .footer__title { font-size: 36px !important; }
+
+}
 </style>
 </head>
 <body>
@@ -1202,7 +1323,7 @@ body { font-size: 20px; }
 
   <div style="background:var(--ink);padding:10px 16px 0;text-align:center;">
   <p style="font-size:14px;color:#a8c4dc;letter-spacing:0.5px;line-height:1.6;">
-    👆 <strong style="color:var(--gold)">Tap a day below</strong> to jump to it &nbsp;·&nbsp; Swipe left to see more days
+    👇 <strong style="color:var(--gold)">Tap a day below</strong> to jump to it &nbsp;·&nbsp; Swipe left to see more days
   </p>
 </div>
 <nav class="day-nav" id="dayNav" role="tablist">
@@ -1365,8 +1486,8 @@ body { font-size: 20px; }
       </div>
     </div>
     <div class="day-photos">
-      <div class="day-photos__item"><img src="https://images.unsplash.com/photo-1527657712555-e7c6a1b5bd3f?w=900&q=85&fit=crop&crop=center" alt="Skogafoss" loading="lazy"></div>
-      <div class="day-photos__item"><img src="https://images.unsplash.com/photo-1551316679-9c6ae9dec224?w=900&q=85&fit=crop&crop=center" alt="Reynisfjara" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d2-strip-skogafoss.jpg" alt="Skogafoss" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d2-strip-reynisfjara.jpg" alt="Reynisfjara" loading="lazy"></div>
       <div class="day-photos__item"><img src="images/d2-strip-jokulsarlon.jpg" alt="Jokulsarlon" loading="lazy"></div>
     </div>
     <div class="elder-note"><div class="elder-note__label">👴 Elder-Friendly Note</div>Most stops are roadside or short flat walks. At Reynisfjara, keep well back from the shore — sneaker waves can appear suddenly.</div>
