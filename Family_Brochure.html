@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Iceland Family Road Trip 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --ink:       #0d1b2a;
+  --ink-mid:   #1b3a5c;
+  --ink-light: #3d5a7a;
+  --mist:      #6b8fa8;
+  --ice:       #b8d9f0;
+  --frost:     #e8f3fb;
+  --snow:      #f5f9fc;
+  --white:     #ffffff;
+  --gold:      #c8a84b;
+  --gold-warm: #e8c060;
+  --green:     #2d7a4a;
+  --green-lt:  #e8f5ee;
+  --amber:     #fff8e8;
+  --shadow:    rgba(13,27,42,0.14);
+  --shadow-lg: rgba(13,27,42,0.22);
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  20px;
+
+  --max-w: 480px;
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--snow);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; width: 100%; object-fit: cover; }
+
+/* ═══════════════════════════════════════════════
+   LAYOUT WRAPPER
+═══════════════════════════════════════════════ */
+.brochure {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  background: var(--white);
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════
+   COVER SLIDE
+═══════════════════════════════════════════════ */
+.cover {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.cover__bg {
+  position: absolute; inset: 0;
+  background-image: url('images/kirkjufell.jpg');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+  animation: zoomOut 8s ease forwards;
+}
+@keyframes zoomOut {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.00); }
+}
+.cover__gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13,27,42,0.10) 0%,
+    rgba(13,27,42,0.05) 30%,
+    rgba(13,27,42,0.55) 65%,
+    rgba(13,27,42,0.88) 100%
+  );
+}
+.cover__top-tag {
+  position: absolute;
+  top: 20px; left: 84px;
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(13,27,42,0.55);
+  padding: 6px 12px;
+  border-radius: 3px;
+  backdrop-filter: blur(6px);
+  animation: fadeDown 1s ease 0.3s both;
+}
+.cover__content {
+  position: relative;
+  z-index: 2;
+  padding: 0 24px 36px;
+  animation: fadeUp 1s ease 0.2s both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity:0; transform: translateY(-12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.cover__eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ice);
+  margin-bottom: 8px;
+}
+.cover__title {
+  font-family: var(--font-display);
+  font-size: clamp(62px, 18vw, 88px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 0.9;
+  letter-spacing: -2px;
+  margin-bottom: 10px;
+}
+.cover__subtitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ice);
+  margin-bottom: 4px;
+}
+.cover__year {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.cover__badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.badge {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: rgba(72,144,217,0.25);
+  color: var(--white);
+  border: 1px solid rgba(184,217,240,0.35);
+  backdrop-filter: blur(6px);
+}
+.badge--gold {
+  background: rgba(200,168,75,0.28);
+  border-color: rgba(200,168,75,0.5);
+  color: var(--gold-warm);
+}
+.cover__tagline {
+  font-size: 11px;
+  color: rgba(184,217,240,0.8);
+  letter-spacing: 0.5px;
+  line-height: 1.7;
+}
+.cover__scroll-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.scroll-arrow {
+  width: 18px; height: 18px;
+  border-right: 1.5px solid rgba(255,255,255,0.4);
+  border-bottom: 1.5px solid rgba(255,255,255,0.4);
+  transform: rotate(45deg);
+  animation: bounce 2s ease infinite;
+}
+@keyframes bounce {
+  0%,100% { transform: rotate(45deg) translateY(0); }
+  50%      { transform: rotate(45deg) translateY(4px); }
+}
+
+/* ═══════════════════════════════════════════════
+   COLLAGE STRIP (cover photos)
+═══════════════════════════════════════════════ */
+.collage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 160px 100px;
+  gap: 3px;
+  background: var(--ink);
+}
+.collage__item { overflow: hidden; position: relative; }
+.collage__item:first-child { grid-row: span 2; }
+.collage__item img {
+  height: 100%; width: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.collage__item:hover img { transform: scale(1.05); }
+.collage__label {
+  position: absolute; bottom: 8px; left: 10px;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: white;
+  background: rgba(13,27,42,0.6);
+  padding: 3px 7px; border-radius: 2px;
+  backdrop-filter: blur(4px);
+}
+
+/* ═══════════════════════════════════════════════
+   SECTION HEADINGS
+═══════════════════════════════════════════════ */
+.section-header {
+  padding: 28px 20px 16px;
+  background: var(--ink);
+}
+.section-header--light {
+  background: var(--snow);
+  border-bottom: 1px solid var(--ice);
+}
+.section-header__eyebrow {
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px;
+}
+.section-header__title {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 600;
+  color: var(--white);
+  line-height: 1.1;
+}
+.section-header--light .section-header__title { color: var(--ink); }
+.section-header__sub {
+  font-size: 12px; color: var(--mist);
+  margin-top: 5px; line-height: 1.6;
+}
+.section-header--light .section-header__sub { color: var(--ink-light); }
+
+/* ═══════════════════════════════════════════════
+   ROUTE MAP SECTION
+═══════════════════════════════════════════════ */
+.route-map {
+  background: var(--ink);
+  padding: 0 0 24px;
+}
+.route-map__img-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+.route-map__img-wrap img { height: 100%; object-fit: cover; object-position: center 40%; }
+.route-map__img-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, var(--ink) 100%);
+}
+.route-map__info {
+  padding: 0 20px;
+}
+.route-map__note {
+  font-size: 11px; color: var(--mist);
+  line-height: 1.8; margin-bottom: 16px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--r-sm);
+  border-left: 2px solid var(--gold);
+}
+
+/* ═══════════════════════════════════════════════
+   ACCOMMODATION TIMELINE
+═══════════════════════════════════════════════ */
+.accom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px 24px;
+  background: var(--ink);
+}
+.accom-card {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(184,217,240,0.12);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.accom-card__day {
+  min-width: 30px;
+  text-align: center;
+}
+.accom-card__day-label {
+  font-size: 8px; font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--gold);
+  background: rgba(200,168,75,0.18);
+  padding: 2px 4px;
+  border-radius: 3px;
+  display: block;
+  margin-bottom: 2px;
+}
+.accom-card__nights {
+  font-size: 8px; color: var(--mist);
+}
+.accom-card__name {
+  font-size: 11px; font-weight: 500;
+  color: var(--white); line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════
+   DAY CARDS (tabs/accordion)
+═══════════════════════════════════════════════ */
+.days-section { background: var(--snow); }
+
+.day-nav {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.day-nav::-webkit-scrollbar { display: none; }
+.day-nav-btn {
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--mist);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.day-nav-btn:hover  { color: var(--white); background: rgba(255,255,255,0.1); }
+.day-nav-btn.active { color: var(--ink); background: var(--gold); border-color: var(--gold); }
+
+.day-panel { display: none; animation: panelIn 0.3s ease; }
+.day-panel.active { display: block; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Day hero */
+.day-hero {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+.day-hero__img { height: 100%; object-fit: cover; }
+.day-hero__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(13,27,42,0.1) 0%, rgba(13,27,42,0.75) 100%);
+}
+.day-hero__badges {
+  position: absolute;
+  top: 14px; left: 14px; right: 14px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.day-hero__day-badge {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 6px 12px; border-radius: 4px;
+}
+.day-hero__region-badge {
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  background: rgba(13,27,42,0.6);
+  color: var(--white);
+  padding: 6px 10px; border-radius: 4px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.2);
+  max-width: 160px;
+  text-align: right;
+}
+.day-hero__content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 14px 16px;
+}
+.day-hero__title {
+  font-family: var(--font-display);
+  font-size: 24px; font-weight: 600;
+  color: var(--white); line-height: 1.15;
+  margin-bottom: 4px;
+}
+.day-hero__meta {
+  font-size: 10px; color: var(--ice);
+  display: flex; gap: 12px;
+  flex-wrap: wrap;
+}
+.day-hero__meta span { display: flex; align-items: center; gap: 4px; }
+
+/* Day info bar */
+.day-info-bar {
+  display: flex;
+  gap: 0;
+  background: var(--ink);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.day-info-bar__item {
+  flex: 1;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.day-info-bar__item:last-child { border-right: none; }
+.day-info-bar__label {
+  font-size: 8px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--mist);
+}
+.day-info-bar__value {
+  font-size: 11px; font-weight: 500;
+  color: var(--white); line-height: 1.3;
+}
+
+/* Day schedule */
+.day-schedule { padding: 16px; }
+
+.schedule-block {
+  margin-bottom: 14px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.schedule-block__header {
+  display: flex; align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.schedule-block__header--morning  { background: var(--ink-mid); color: var(--ice); }
+.schedule-block__header--afternoon { background: var(--green);  color: white; }
+.schedule-block__header--evening  { background: var(--ink);     color: var(--ice); }
+.schedule-block__icon { font-size: 14px; }
+.schedule-block__body { background: var(--white); padding: 10px 14px; }
+.schedule-item {
+  display: flex; align-items: flex-start;
+  gap: 10px; padding: 7px 0;
+  border-bottom: 1px solid var(--frost);
+  font-size: 12.5px; line-height: 1.55;
+  color: var(--ink);
+}
+.schedule-item:last-child { border-bottom: none; padding-bottom: 2px; }
+.schedule-item__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0; margin-top: 6px;
+}
+.schedule-item__dot--blue   { background: var(--ink-mid); }
+.schedule-item__dot--green  { background: var(--green); }
+.schedule-item__dot--dark   { background: var(--ink); }
+.schedule-item__dot--gold   { background: var(--gold); }
+.schedule-item .optional {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--mist);
+  margin-left: 4px;
+}
+
+/* Photo strip within day */
+.day-photos {
+  display: flex;
+  gap: 3px;
+  height: 100px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 16px 0;
+}
+.day-photos::-webkit-scrollbar { display: none; }
+.day-photos__item {
+  flex-shrink: 0;
+  width: 130px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.day-photos__item img { height: 100%; width: 100%; object-fit: cover; }
+
+/* Elder note */
+.elder-note {
+  margin: 0 16px 16px;
+  background: var(--amber);
+  border: 1px solid rgba(200,168,75,0.3);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  font-size: 12px; line-height: 1.6;
+  color: var(--ink);
+}
+.elder-note__label {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════════════════
+   HOT SPRINGS SECTION
+═══════════════════════════════════════════════ */
+.springs-section { background: var(--snow); }
+.springs-hero {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+.springs-hero img { height: 100%; object-fit: cover; object-position: center 60%; }
+.springs-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(13,27,42,0.2) 0%, rgba(13,27,42,0.8) 100%);
+}
+.springs-hero__content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 18px;
+  z-index: 1;
+}
+.springs-hero__title {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 600;
+  color: var(--white); margin-bottom: 2px;
+}
+.springs-hero__sub { font-size: 11px; color: var(--ice); }
+
+.springs-temp-bar {
+  display: flex; align-items: center;
+  gap: 8px;
+  margin: 0; padding: 11px 18px;
+  background: var(--gold);
+  font-size: 11px; font-weight: 600;
+  color: var(--ink);
+}
+
+.spring-card {
+  margin: 12px 16px;
+  background: var(--white);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+.spring-card__header {
+  display: flex; align-items: center;
+  gap: 10px; padding: 12px 14px;
+  border-bottom: 1px solid var(--frost);
+}
+.spring-card__day-chip {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 4px 8px; border-radius: 4px;
+  white-space: nowrap;
+}
+.spring-card__day-chip--natural  { background: var(--green-lt);  color: var(--green); }
+.spring-card__day-chip--facility { background: rgba(72,144,217,0.12); color: var(--ink-mid); }
+.spring-card__name {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 600;
+  color: var(--ink); flex: 1;
+}
+.spring-card__type {
+  font-size: 8px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; padding: 3px 8px;
+  border-radius: 3px;
+}
+.spring-card__type--natural  { background: var(--green-lt); color: var(--green); }
+.spring-card__type--facility { background: rgba(72,144,217,0.1); color: var(--ink-mid); }
+.spring-card__body { padding: 12px 14px; }
+.spring-card__stats {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 10px;
+}
+.spring-stat {
+  background: var(--frost);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.spring-stat__label {
+  font-size: 8px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--mist); margin-bottom: 3px;
+}
+.spring-stat__value {
+  font-size: 12px; font-weight: 600; color: var(--ink);
+}
+.spring-card__note {
+  font-size: 12px; color: var(--ink-light);
+  line-height: 1.6; border-top: 1px solid var(--frost);
+  padding-top: 10px;
+}
+.star-row { color: var(--gold); font-size: 13px; letter-spacing: 1px; }
+
+/* Spring image */
+.spring-card__img { height: 140px; overflow: hidden; }
+.spring-card__img img { height: 100%; width: 100%; object-fit: cover; transition: transform 0.5s; }
+.spring-card:hover .spring-card__img img { transform: scale(1.04); }
+
+/* ═══════════════════════════════════════════════
+   WHAT TO EXPECT
+═══════════════════════════════════════════════ */
+.expect-section { background: var(--snow); }
+.expect-hero {
+  position: relative;
+  height: 180px; overflow: hidden;
+}
+.expect-hero img { height: 100%; object-fit: cover; object-position: center 30%; }
+.expect-hero::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(13,27,42,0.1), rgba(13,27,42,0.82));
+}
+.expect-hero__content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 18px; z-index: 1;
+}
+.expect-hero__title {
+  font-family: var(--font-display);
+  font-size: 26px; font-weight: 600;
+  color: var(--white); margin-bottom: 2px;
+}
+.expect-hero__sub { font-size: 11px; color: var(--ice); }
+
+.expect-accordion {
+  padding: 0 16px 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  padding-top: 16px;
+}
+.expect-item {
+  background: var(--white);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  box-shadow: 0 1px 6px var(--shadow);
+}
+.expect-item__trigger {
+  width: 100%;
+  display: flex; align-items: center;
+  gap: 10px;
+  padding: 13px 14px;
+  cursor: pointer;
+  border: none; background: none;
+  text-align: left;
+  font-family: var(--font-body);
+}
+.expect-item__icon { font-size: 18px; flex-shrink: 0; }
+.expect-item__label {
+  flex: 1; font-size: 13px; font-weight: 600;
+  color: var(--ink);
+}
+.expect-item__chevron {
+  width: 18px; height: 18px;
+  border-right: 2px solid var(--mist);
+  border-bottom: 2px solid var(--mist);
+  transform: rotate(45deg);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.expect-item.open .expect-item__chevron {
+  transform: rotate(-135deg);
+}
+.expect-item__body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.expect-item.open .expect-item__body { max-height: 400px; }
+.expect-item__content {
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--frost);
+}
+.expect-item__content ul {
+  list-style: none; margin-top: 10px;
+}
+.expect-item__content ul li {
+  font-size: 12.5px; color: var(--ink);
+  line-height: 1.65; padding: 5px 0;
+  border-bottom: 1px solid var(--frost);
+  padding-left: 14px; position: relative;
+}
+.expect-item__content ul li:last-child { border-bottom: none; }
+.expect-item__content ul li::before {
+  content: '';
+  position: absolute; left: 0; top: 12px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+.footer {
+  background: var(--ink);
+  padding: 28px 20px;
+  text-align: center;
+}
+.footer__title {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 600; font-style: italic;
+  color: var(--white); margin-bottom: 8px;
+}
+.footer__sub {
+  font-size: 11px; color: var(--mist); line-height: 1.8;
+}
+.footer__gold { color: var(--gold); font-weight: 600; }
+.footer__divider {
+  width: 40px; height: 1px;
+  background: var(--gold); margin: 16px auto;
+}
+
+/* ═══════════════════════════════════════════════
+   SECTION DIVIDER
+═══════════════════════════════════════════════ */
+.divider {
+  height: 4px;
+  background: linear-gradient(to right, var(--gold), var(--ice), var(--gold));
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLL TO TOP
+═══════════════════════════════════════════════ */
+.scroll-top {
+  position: fixed; bottom: 24px; right: 16px;
+  width: 44px; height: 44px;
+  background: var(--gold);
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(200,168,75,0.5);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 999;
+  font-size: 18px;
+}
+.scroll-top.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════════════════
+   PHOTO LAZY LOAD SHIMMER
+═══════════════════════════════════════════════ */
+.img-wrap { position: relative; background: #d5dfe8; }
+.img-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.img-wrap img { position: relative; z-index: 1; }
+.img-wrap img.loaded + .shimmer { display: none; }
+
+/* ═══════════════════════════════════════════════
+   MAP SECTION
+═══════════════════════════════════════════════ */
+.map-section { background: var(--ink); }
+#tripMap {
+  height: 420px;
+  width: 100%;
+  border-top: 1px solid rgba(200,168,75,0.2);
+  border-bottom: 1px solid rgba(200,168,75,0.2);
+}
+.map-legend {
+  padding: 10px 16px 18px;
+  background: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.map-legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; color: var(--mist);
+}
+.map-legend-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+.map-hint {
+  padding: 8px 16px 16px;
+  font-size: 13px; color: rgba(107,143,168,0.75);
+  font-style: italic; line-height: 1.6;
+  background: var(--ink);
+}
+@media (min-width: 768px) {
+  #tripMap { height: 540px; }
+}
+
+/* Desktop centring */
+@media (min-width: 480px) {
+  .day-nav { padding: 14px 20px; }
+  .day-schedule { padding: 20px; }
+  .accom-grid { padding: 0 20px 28px; }
+}
+
+/* ═══════════════════════════════════════════════
+   SECTION NAVBAR (fixed top)
+═══════════════════════════════════════════════ */
+.site-nav {
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: var(--max-w);
+  z-index: 200;
+  background: rgba(13,27,42,0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,168,75,0.25);
+  display: flex;
+  align-items: stretch;
+  height: 50px;
+  transition: transform 0.3s ease;
+}
+.site-nav.hidden { transform: translateX(-50%) translateY(-100%); }
+.site-nav__logo {
+  display: flex; align-items: center;
+  padding: 0 14px;
+  font-family: var(--font-display);
+  font-size: 14px; font-weight: 600; font-style: italic;
+  color: var(--gold);
+  white-space: nowrap;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+.site-nav__links {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+  align-items: stretch;
+}
+.site-nav__links::-webkit-scrollbar { display: none; }
+.site-nav__link {
+  display: flex; align-items: center;
+  padding: 0 13px;
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--mist);
+  text-decoration: none;
+  white-space: nowrap;
+  border: none; background: none; cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+.site-nav__link::after {
+  content: '';
+  position: absolute; bottom: 0; left: 13px; right: 13px;
+  height: 2px; background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+.site-nav__link:hover  { color: var(--ice); }
+.site-nav__link.active { color: var(--gold); }
+.site-nav__link.active::after { transform: scaleX(1); }
+
+/* push content down so it's not hidden behind fixed nav */
+.nav-spacer { height: 50px; }
+
+/* ═══════════════════════════════════════════════
+   FLOATING NAV BUTTON + DRAWER
+═══════════════════════════════════════════════ */
+.nav-fab {
+  position: fixed;
+  top: 16px; left: 16px;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: rgba(13,27,42,0.92);
+  border: 2px solid rgba(200,168,75,0.6);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  z-index: 400;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-fab:hover  { transform: scale(1.08); box-shadow: 0 6px 22px rgba(0,0,0,0.55); }
+.nav-fab:active { transform: scale(0.94); }
+
+/* Overlay */
+.nav-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 350;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.nav-overlay.visible { display: block; opacity: 1; }
+
+/* Drawer */
+.nav-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100%;
+  width: min(280px, 78vw);
+  background: rgba(10,22,38,0.98);
+  border-right: 1px solid rgba(200,168,75,0.25);
+  box-shadow: 4px 0 32px rgba(0,0,0,0.5);
+  z-index: 360;
+  display: flex; flex-direction: column;
+  transform: translateX(-110%);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-drawer.open { transform: translateX(0); }
+
+.nav-drawer__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.nav-drawer__logo {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 600; font-style: italic;
+  color: var(--white);
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-drawer__logo span:first-child { font-size: 26px; }
+.nav-drawer__close {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: none; cursor: pointer;
+  color: var(--mist); font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-drawer__close:hover { background: rgba(255,255,255,0.15); color: var(--white); }
+
+.nav-drawer__links {
+  flex: 1; padding: 12px 0;
+  overflow-y: auto; scrollbar-width: none;
+}
+.nav-drawer__links::-webkit-scrollbar { display: none; }
+
+.nav-drawer__link {
+  width: 100%;
+  display: flex; align-items: center; gap: 18px;
+  padding: 18px 24px;
+  border: none; background: none; cursor: pointer;
+  text-align: left; text-decoration: none;
+  position: relative;
+  transition: background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-drawer__link:hover  { background: rgba(255,255,255,0.06); }
+.nav-drawer__link.active { background: rgba(200,168,75,0.1); }
+.nav-drawer__link.active::before {
+  content: '';
+  position: absolute; left: 0; top: 12px; bottom: 12px;
+  width: 3px; background: var(--gold); border-radius: 0 3px 3px 0;
+}
+.nav-drawer__icon  { font-size: 24px; width: 32px; text-align: center; flex-shrink: 0; }
+.nav-drawer__label {
+  font-family: var(--font-body);
+  font-size: 17px; font-weight: 600;
+  color: #b8d0e8;
+  letter-spacing: 0.3px;
+}
+.nav-drawer__link.active .nav-drawer__label { color: var(--gold); }
+.nav-drawer__link:hover  .nav-drawer__label { color: var(--white); }
+
+.nav-drawer__footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px; color: rgba(107,143,168,0.7);
+  font-style: italic;
+}
+
+
+/* ═══════════════════════════════════════════════
+   LARGE FONTS — ELDERLY FRIENDLY
+═══════════════════════════════════════════════ */
+body { font-size: 20px; }
+
+/* Cover */
+.cover__eyebrow  { font-size: 13px; letter-spacing: 3px; }
+.cover__title    { font-size: clamp(80px, 22vw, 108px) !important; }
+.cover__subtitle { font-size: 30px !important; }
+.cover__year     { font-size: 46px !important; }
+.cover__tagline  { font-size: 17px !important; line-height: 1.9 !important; }
+.cover__scroll-hint { font-size: 13px; }
+.badge           { font-size: 15px !important; padding: 9px 18px !important; letter-spacing: 1.5px; }
+
+/* Collage */
+.collage__label { font-size: 14px !important; padding: 5px 10px !important; }
+
+/* Section headers */
+.section-header__eyebrow { font-size: 13px !important; letter-spacing: 3px; }
+.section-header__title   { font-size: 40px !important; }
+.section-header__sub     { font-size: 18px !important; line-height: 1.7 !important; color: #c0d8ec !important; }
+
+/* Route */
+.route-map__note     { font-size: 17px !important; line-height: 2.0 !important; padding: 16px 18px !important; color: #d0e4f0 !important; }
+.accom-card__name    { font-size: 16px !important; font-weight: 700 !important; color: #ffffff !important; }
+.accom-card__day-label { font-size: 11px !important; }
+.accom-card__nights  { font-size: 12px !important; color: #c8daea !important; font-weight: 500 !important; }
+
+/* Day nav */
+.day-nav-btn { font-size: 15px !important; padding: 11px 18px !important; font-weight: 700 !important; }
+
+/* Day hero */
+.day-hero__title { font-size: 34px !important; line-height: 1.15 !important; }
+.day-hero__meta  { font-size: 16px !important; gap: 18px !important; color: #e0eefa !important; font-weight: 500 !important; }
+
+/* Day info bar */
+.day-info-bar__label { font-size: 12px !important; letter-spacing: 1.5px; color: #a8c8e0 !important; }
+.day-info-bar__value { font-size: 18px !important; font-weight: 600 !important; }
+
+/* Schedule */
+.schedule-block__header { font-size: 14px !important; padding: 12px 18px !important; letter-spacing: 2px; }
+.schedule-block__icon   { font-size: 18px !important; }
+.schedule-item          { font-size: 18px !important; line-height: 1.75 !important; padding: 10px 0 !important; }
+
+/* Elder note */
+.elder-note          { font-size: 17px !important; line-height: 1.8 !important; padding: 14px 18px !important; }
+.elder-note__label   { font-size: 13px !important; letter-spacing: 1.5px; margin-bottom: 6px !important; }
+
+/* Day photo strip */
+.day-photos__item { width: 160px !important; }
+.day-photos       { height: 120px !important; }
+
+/* Hot springs */
+.springs-hero__title { font-size: 40px !important; }
+.springs-hero__sub   { font-size: 17px !important; color: #d8ecf8 !important; }
+.springs-temp-bar    { font-size: 16px !important; padding: 14px 22px !important; line-height: 1.7 !important; }
+.spring-card__name   { font-size: 30px !important; }
+.spring-card__type   { font-size: 12px !important; padding: 5px 10px !important; }
+.spring-card__day-chip { font-size: 13px !important; padding: 6px 12px !important; }
+.spring-stat__label  { font-size: 12px !important; letter-spacing: 1px; color: #2a4060 !important; font-weight: 700 !important; }
+.spring-stat__value  { font-size: 18px !important; font-weight: 700 !important; }
+.spring-card__note   { font-size: 17px !important; line-height: 1.8 !important; padding-top: 14px !important; }
+
+/* What to Expect */
+.expect-hero__title    { font-size: 38px !important; }
+.expect-hero__sub      { font-size: 17px !important; color: #d8ecf8 !important; }
+.expect-item__trigger  { padding: 18px 16px !important; }
+.expect-item__icon     { font-size: 24px !important; }
+.expect-item__label    { font-size: 20px !important; font-weight: 700 !important; }
+.expect-item__content ul li { font-size: 18px !important; line-height: 1.85 !important; padding: 9px 0 9px 20px !important; }
+
+/* Footer */
+.footer { padding: 36px 24px !important; }
+.footer__title { font-size: 32px !important; }
+.footer__sub   { font-size: 17px !important; line-height: 2.0 !important; color: #b8d0e8 !important; }
+
+/* ═══════════════════════════════════════════════
+   DESKTOP LAYOUT (≥ 768px)
+═══════════════════════════════════════════════ */
+@media (min-width: 768px) {
+
+  /* Dark canvas so the centred brochure floats */
+  body { background: #0f1c28; }
+  .brochure { box-shadow: 0 0 100px rgba(0,0,0,0.6); }
+
+  /* ── Max-width: go wide ── */
+  :root { --max-w: 1120px; }
+
+  /* ── Cover ── */
+  .cover__content { padding: 0 64px 72px; }
+  .cover__title   { font-size: clamp(80px, 8.5vw, 128px) !important; }
+
+  /* ── Collage: 3 equal columns ── */
+  .collage {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 320px;
+    height: 320px;
+  }
+  .collage__item:first-child { grid-row: span 1; }
+
+  /* ── Route: taller hero, 4-col accom grid ── */
+  .route-map__img-wrap { height: 380px; }
+  .route-map__info     { padding: 0 32px; }
+  .accom-grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 32px 32px;
+  }
+
+  /* ── Top nav: fill full width ── */
+  .site-nav { max-width: var(--max-w); }
+  .site-nav__links { overflow-x: visible; }
+  .site-nav__link  { font-size: 11px !important; padding: 0 18px; }
+
+  /* ── Day nav: no horizontal scroll, wrap neatly ── */
+  .day-nav {
+    overflow-x: visible;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 18px 40px;
+  }
+  .day-nav-btn {
+    font-size: 13px !important;
+    padding: 10px 22px !important;
+  }
+
+  /* ── Day panel: LEFT photo column + RIGHT schedule column ── */
+  .day-panel.active {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-areas:
+      "hero      sched"
+      "infobar   sched"
+      "photos    sched"
+      "note      sched";
+    grid-template-rows: auto auto auto 1fr;
+    min-height: 580px;
+    align-items: start;
+  }
+  .day-hero     { grid-area: hero;    height: 380px !important; }
+  .day-info-bar { grid-area: infobar; }
+  .day-photos   {
+    grid-area: photos;
+    height: 150px !important;
+    padding: 12px 20px;
+  }
+  .day-photos__item { width: 210px !important; }
+  .elder-note   { grid-area: note; margin: 0 20px 24px; }
+  .day-schedule {
+    grid-area: sched;
+    padding: 24px 20px;
+    background: var(--snow);
+    border-left: 1px solid var(--frost);
+    overflow-y: auto;
+    /* stretch to fill all 4 row slots */
+    align-self: stretch;
+  }
+
+  /* Slightly smaller schedule text so it fits the column */
+  .schedule-item        { font-size: 16px !important; line-height: 1.65 !important; }
+  .schedule-block__header { font-size: 12px !important; padding: 10px 16px !important; }
+  .day-hero__title      { font-size: 30px !important; }
+  .day-hero__meta       { font-size: 14px !important; }
+  .day-info-bar__value  { font-size: 16px !important; }
+
+  /* ── Spring cards: 2-column grid ── */
+  .springs-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .springs-hero     { grid-column: 1 / -1; height: 340px; }
+  .springs-temp-bar { grid-column: 1 / -1; }
+  .spring-card      { margin: 12px 10px; }
+  .spring-card__img { height: 200px; }
+  .spring-card__name { font-size: 26px !important; }
+
+  /* ── What to Expect: 2-column accordion ── */
+  .expect-hero { height: 300px; }
+  .expect-accordion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    padding: 24px 32px 40px;
+  }
+  /* Keep each item self-contained so accordion stays readable */
+  .expect-item__body.open,
+  .expect-item.open .expect-item__body { max-height: 600px; }
+
+  /* ── Section headers: more breathing room ── */
+  .section-header { padding: 40px 40px 20px; }
+  .section-header__title { font-size: 44px !important; }
+
+  /* ── Footer ── */
+  .footer { padding: 48px 48px !important; }
+  .footer__title { font-size: 36px !important; }
+
+}
+</style>
+</head>
+<body>
+
+
+
+<!-- Floating nav button -->
+<button class="nav-fab" id="navFab" onclick="openDrawer()" aria-label="Open navigation">🇮🇸</button>
+
+<!-- Overlay -->
+<div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
+
+<!-- Side drawer -->
+<nav class="nav-drawer" id="navDrawer" role="navigation">
+  <div class="nav-drawer__header">
+    <div class="nav-drawer__logo">
+      <span>🇮🇸</span><span>Iceland 2026</span>
+    </div>
+    <button class="nav-drawer__close" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div class="nav-drawer__links">
+    <button class="nav-drawer__link active" data-section="cover"     onclick="drawerNav('cover')">
+      <span class="nav-drawer__icon">🏔</span><span class="nav-drawer__label">Cover</span>
+    </button>
+    <button class="nav-drawer__link"        data-section="route"     onclick="drawerNav('route')">
+      <span class="nav-drawer__icon">🗺</span><span class="nav-drawer__label">Route Overview</span>
+    </button>
+    <button class="nav-drawer__link"        data-section="map"       onclick="drawerNav('map')">
+      <span class="nav-drawer__icon">📍</span><span class="nav-drawer__label">Trip Map</span>
+    </button>
+    <button class="nav-drawer__link"        data-section="itinerary" onclick="drawerNav('itinerary')">
+      <span class="nav-drawer__icon">📅</span><span class="nav-drawer__label">Day by Day</span>
+    </button>
+    <button class="nav-drawer__link"        data-section="springs"   onclick="drawerNav('springs')">
+      <span class="nav-drawer__icon">♨️</span><span class="nav-drawer__label">Hot Springs</span>
+    </button>
+    <button class="nav-drawer__link"        data-section="expect"    onclick="drawerNav('expect')">
+      <span class="nav-drawer__icon">💡</span><span class="nav-drawer__label">Tips & Info</span>
+    </button>
+  </div>
+  <div class="nav-drawer__footer">Family Adventure · July 2026</div>
+</nav>
+
+<div class="brochure">
+
+<!-- ══════════════════ COVER ══════════════════ -->
+<section class="cover" id="cover">
+  <div class="cover__bg"></div>
+  <div class="cover__gradient"></div>
+  <div class="cover__top-tag">Family Adventure Guide · July 2026</div>
+  <div class="cover__content">
+    <p class="cover__eyebrow">Iceland Summer Road Trip</p>
+    <h1 class="cover__title">ICELAND</h1>
+    <p class="cover__subtitle">Summer Road Trip</p>
+    <p class="cover__year">2026</p>
+    <div class="cover__badges">
+      <span class="badge badge--gold">8 Days</span>
+      <span class="badge">Ring Road Loop</span>
+    </div>
+    <p class="cover__tagline">
+      Elder-friendly pacing · All paved roads · No hiking required<br>
+      Scenic viewpoints · Accessible hot springs
+    </p>
+    <div class="cover__scroll-hint">
+      <div class="scroll-arrow"></div>
+      <span>Scroll to explore</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PHOTO COLLAGE ══════════════════ -->
+<div class="collage">
+  <div class="collage__item">
+    <img src="images/collage-jokulsarlon.jpg"  alt="Jökulsárlón Glacier Lagoon" loading="lazy">
+    <span class="collage__label">Jökulsárlón</span>
+  </div>
+  <div class="collage__item">
+    <img src="images/seljalandsfoss.jpg" alt="Seljalandsfoss" loading="lazy">
+    <span class="collage__label">Seljalandsfoss</span>
+  </div>
+  <div class="collage__item">
+    <img src="images/collage-diamond-beach.jpg" alt="Diamond Beach" loading="lazy">
+    <span class="collage__label">Diamond Beach</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ ROUTE OVERVIEW ══════════════════ -->
+<section class="route-map" id="route">
+  <div class="section-header">
+    <p class="section-header__eyebrow">Navigation</p>
+    <h2 class="section-header__title">Route Overview</h2>
+    <p class="section-header__sub">Ring Road + Snæfellsnes · ~1,400 km total · All paved</p>
+  </div>
+  <div class="route-map__img-wrap">
+    <img src="images/route-hero.jpg" alt="Iceland landscape" loading="lazy">
+  </div>
+  <div class="route-map__info">
+    <div class="route-map__note">
+      🗺 <strong style="color:var(--gold)">Anti-clockwise loop</strong> — Reykjavik → Snæfellsnes → Húsavík → Mývatn → East Fjords → South Coast → Golden Circle → Reykjavik. No rough F-roads. Maximum 4 hrs driving per day.
+    </div>
+  </div>
+
+  <!-- Accommodation grid -->
+  <div style="padding: 0 20px 10px;">
+    <p style="font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Accommodation Timeline</p>
+  </div>
+  <div class="accom-grid">
+    <div class="accom-card">
+      <div class="accom-card__day"><span class="accom-card__day-label">D0</span><span class="accom-card__nights">1 night</span></div>
+      <span class="accom-card__name">Astro Hverfisgata</span>
+    </div>
+    <div class="accom-card">
+      <div class="accom-card__day"><span class="accom-card__day-label">D1</span><span class="accom-card__nights">1 night</span></div>
+      <span class="accom-card__name">Black Beach Farm, Vík</span>
+    </div>
+    <div class="accom-card">
+      <div class="accom-card__day"><span class="accom-card__day-label">D2</span><span class="accom-card__nights">1 night</span></div>
+      <span class="accom-card__name">Hotel Smyrlabjörg</span>
+    </div>
+    <div class="accom-card">
+      <div class="accom-card__day"><span class="accom-card__day-label">D3</span><span class="accom-card__nights">1 night</span></div>
+      <span class="accom-card__name">Guesthouse Svartiskógur</span>
+    </div>
+    <div class="accom-card">
+      <div class="accom-card__day"><span class="accom-card__day-label">D4</span><span class="accom-card__nights">1 night</span></div>
+      <span class="accom-card__name">Steinaskjól Apartments</span>
+    </div>
+    <div class="accom-card">
+      <div class="accom-card__day"><span class="accom-card__day-label">D5–6</span><span class="accom-card__nights">2 nights</span></div>
+      <span class="accom-card__name">Hotel Glymur</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ MAP ══════════════════ -->
+<section class="map-section" id="map">
+  <div class="section-header">
+    <p class="section-header__eyebrow">All Stops</p>
+    <h2 class="section-header__title">Trip Map</h2>
+    <p class="section-header__sub">Anti-clockwise loop · Tap any pin for details</p>
+  </div>
+  <div id="tripMap"></div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#c8a84b"></div>D0 Reykjavik</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#4890d9"></div>D1 Golden Circle</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#2d7a4a"></div>D2 South Coast</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#9b5de5"></div>D3 East Fjords</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#e07030"></div>D4 Mývatn</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#00b4d8"></div>D5 Húsavík</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#f72585"></div>D6 Snæfellsnes</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#adb5bd"></div>D7 Departure</div>
+  </div>
+  <p class="map-hint">📍 Pinch to zoom · Tap a pin to see the stop name · Pan to explore</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ DAY-BY-DAY ══════════════════ -->
+<section class="days-section" id="itinerary">
+  <div class="section-header" style="background:var(--snow);padding-bottom:4px;">
+    <p class="section-header__eyebrow" style="color:var(--gold)">Day by Day</p>
+    <h2 class="section-header__title" style="color:var(--ink)">Itinerary</h2>
+  </div>
+
+  <div style="background:var(--ink);padding:10px 16px 0;text-align:center;">
+  <p style="font-size:14px;color:#a8c4dc;letter-spacing:0.5px;line-height:1.6;">
+    👇 <strong style="color:var(--gold)">Tap a day below</strong> to jump to it &nbsp;·&nbsp; Swipe left to see more days
+  </p>
+</div>
+<nav class="day-nav" id="dayNav" role="tablist">
+    <button class="day-nav-btn active" data-day="0" role="tab">D0 · Reykjavik</button>
+    <button class="day-nav-btn" data-day="1" role="tab">D1 · Golden Circle</button>
+    <button class="day-nav-btn" data-day="2" role="tab">D2 · South → Höfn</button>
+    <button class="day-nav-btn" data-day="3" role="tab">D3 · East Fjords</button>
+    <button class="day-nav-btn" data-day="4" role="tab">D4 · Mývatn</button>
+    <button class="day-nav-btn" data-day="5" role="tab">D5 · Húsavík</button>
+    <button class="day-nav-btn" data-day="6" role="tab">D6 · Snæfellsnes</button>
+    <button class="day-nav-btn" data-day="7" role="tab">D7 · Departure</button>
+  </nav>
+
+  <!-- DAY 0 -->
+  <div class="day-panel active" id="day-0" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d0-hero-reykjavik.jpg" alt="Reykjavik" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 0</span>
+        <span class="day-hero__region-badge">Arrival Day</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">Arrival — Reykjavik</h3>
+        <div class="day-hero__meta">
+          <span>✈️ Evening arrival</span>
+          <span>🏨 Astro Hverfisgata</span>
+        </div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">None</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Astro Hverfisgata</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Easy 🟢</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening — Arrival</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Land at Keflavík, drive to Reykjavik (~45 min)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Check in at Astro Hverfisgata</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Stroll Laugavegur — Reykjavik's main shopping street, lined with cafés and boutiques</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d0-strip-hallgrimskirkja.jpg" alt="Hallgrímskirkja" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d0-strip-harpa.jpg" alt="Harpa" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d0-strip-reykjavik.jpg" alt="Reykjavik" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>Laugavegur is flat and pedestrian-friendly — a gentle evening stroll is perfect after a long flight. No rush tonight.</div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="day-panel" id="day-1" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d1-hero-gullfoss.jpg" alt="Gullfoss" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 1</span>
+        <span class="day-hero__region-badge">Golden Circle</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">Golden Circle → South Coast</h3>
+        <div class="day-hero__meta"><span>🚗 ~3.5 hrs</span><span>🏨 Black Beach Farm</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~3.5 hrs</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Black Beach Farm</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Moderate 🟡</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Þingvellir National Park — walk between tectonic plates (flat, paved path)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Geysir geothermal area — watch Strokkur erupt every 5–10 min</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Gullfoss waterfall — Iceland's most famous cascade</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Hrunalaug natural hot pot — hidden gem, stone pool, meadow setting</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Seljalandsfoss — walk behind the waterfall</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Gljúfrabúi hidden canyon waterfall nearby</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Dyrhólaey arch at sunset <span class="optional">(optional)</span></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d1-strip-gullfoss.jpg" alt="Gullfoss" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/seljalandsfoss.jpg" alt="Seljalandsfoss" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d1-strip-geysir.jpg" alt="Iceland landscape" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>All main stops have short, paved or flat paths. Hrunalaug hot pot is a gentle 5-min walk from the parking area.</div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-panel" id="day-2" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d2-hero-jokulsarlon.jpg" alt="Jokulsarlon" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 2</span>
+        <span class="day-hero__region-badge">Glaciers & Black Beaches</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">South Coast → Höfn</h3>
+        <div class="day-hero__meta"><span>🚗 ~3.5 hrs</span><span>🏨 Hotel Smyrlabjörg</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~3.5 hrs</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Near Höfn</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Full 🔴</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Skógafoss — impressive waterfall, view from base (no hiking needed)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Kvernufoss — hidden waterfall, short 15-min easy trail</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Dyrhólaey — dramatic rock arch viewpoint</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Reynisfjara black sand beach — basalt columns, powerful waves</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Fjaðrárgljúfur canyon — roadside viewpoint</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Jökulsárlón Glacier Lagoon — boat tour option</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Diamond Beach — icebergs washed ashore on black sand</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Vestrahorn mountain silhouette at sunset</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d2-strip-skogafoss.jpg" alt="Skogafoss" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d2-strip-reynisfjara.jpg" alt="Reynisfjara" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d2-strip-jokulsarlon.jpg" alt="Jokulsarlon" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>Most stops are roadside or short flat walks. At Reynisfjara, keep well back from the shore — sneaker waves can appear suddenly.</div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-panel" id="day-3" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d3-hero-eastfjords.jpg" alt="East Fjords" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 3</span>
+        <span class="day-hero__region-badge">East Fjords + Vök Baths</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">East Fjords & Vök Baths</h3>
+        <div class="day-hero__meta"><span>🚗 ~3 hrs</span><span>🏨 Guesthouse Svartiskógur</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~3 hrs</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">East Fjords</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Easy 🟢</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Drive the spectacular East Fjords scenic route</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Djúpivogur village — charming harbour stop</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Seyðisfjörður — rainbow-painted street & colourful wooden houses</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Scenic mountain drive down into the fjord town</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening — 🌊 Vök Baths</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Vök Baths — floating infinity pools on Lake Urriðavatn</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Dinner in Egilsstaðir</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d3-strip-eastfjords.jpg" alt="East Fjords" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d3-strip-seydisfjordur.jpg" alt="Seydisfjordur" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d3-strip-vok.jpg" alt="Vok Baths" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>Vök Baths is fully accessible with changing rooms, showers and café. The floating pools are reached by a short boardwalk — no uneven terrain.</div>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-panel" id="day-4" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d4-hero-myvatn.jpg" alt="Myvatn geothermal" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 4</span>
+        <span class="day-hero__region-badge">Stuðlagil + Mývatn</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">Canyon → Lake Mývatn</h3>
+        <div class="day-hero__meta"><span>🚗 ~2.5 hrs</span><span>🏨 Steinaskjól Apts</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~2.5 hrs</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Mývatn Area</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Moderate 🟡</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Stuðlagil Canyon — hexagonal basalt columns (west-side viewpoint, minimal walk)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Lower viewpoint of Hengifoss — spectacular even from below</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Hverir — boiling mud pools and sulphur vents (flat gravel path)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Dimmuborgir lava formations — short loop paths available</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Grjótagjá lava cave hot spring (viewing only)</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening — 🌊 Mývatn Nature Baths</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Mývatn Nature Baths — the Blue Lagoon of the north, less crowded</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d4-strip-studlagil.jpg" alt="Iceland geothermal" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d4-strip-hverir.jpg" alt="Hverir" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d4-strip-myvatn-baths.jpg" alt="Myvatn" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>Mývatn Nature Baths has full facilities and is completely accessible. At Hverir, the path is flat gravel — wear grippy shoes and stay on marked paths.</div>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-panel" id="day-5" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d5-hero-husavik.jpg" alt="Godafoss" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 5</span>
+        <span class="day-hero__region-badge">Húsavík + GeoSea</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">Húsavík → Hotel Glymur</h3>
+        <div class="day-hero__meta"><span>🚗 ~3.5 hrs</span><span>🏨 Hotel Glymur</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~3.5 hrs</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Hotel Glymur</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Easy 🟢</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Húsavík harbour — Iceland's premier whale watching town</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Whale watching boat tour — humpbacks common in July <span class="optional">(optional)</span></span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon — 🌊 GeoSea</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>GeoSea Geothermal Sea Baths — ocean-edge infinity pools with fjord views</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Goðafoss — "Waterfall of the Gods" (easy roadside stop)</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening — 🌊 Fosslaug</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Fosslaug natural hot spring — roadside soak at midnight sun</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Drive south to Hotel Glymur</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d5-strip-godafoss.jpg" alt="Godafoss" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/whale-watching.jpg" alt="Whale watching" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d5-strip-geosea.jpg" alt="Geothermal baths" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>Whale watching boats have heated indoor seating. GeoSea has premium facilities — changing rooms, showers, café, and full accessibility.</div>
+  </div>
+
+  <!-- DAY 6 -->
+  <div class="day-panel" id="day-6" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/kirkjufell.jpg" alt="Kirkjufell" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 6</span>
+        <span class="day-hero__region-badge">Snæfellsnes Loop</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">Snæfellsnes Peninsula</h3>
+        <div class="day-hero__meta"><span>🚗 ~4 hrs loop</span><span>🏨 Hotel Glymur (2nd night)</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~4 hrs loop</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Hotel Glymur</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Moderate 🟡</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Kirkjufell mountain & Kirkjufellsfoss — most photographed spot in Iceland</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Snæfellsjökull glacier volcano — drive to national park visitor centre</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Lóndrangar volcanic rock pinnacles — roadside viewpoint</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Arnarstapi harbour — dramatic cliff arches and sea birds</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Ytri Tunga seal beach <span class="optional">(optional)</span></span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Return to Hotel Glymur</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Dinner with views of Hvalfjörður fjord</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/kirkjufell.jpg" alt="Kirkjufell" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d6-strip-snaefellsnes.jpg" alt="Snaefellsnes" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d6-strip-arnarstapi.jpg" alt="Iceland coast" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>All Snæfellsnes stops are roadside or short easy flat walks. Route 54 is fully paved the entire loop — one of Iceland's most scenic drives.</div>
+  </div>
+
+  <!-- DAY 7 -->
+  <div class="day-panel" id="day-7" role="tabpanel">
+    <div class="day-hero">
+      <img class="day-hero__img" src="images/d7-hero-hraunfossar.jpg" alt="Iceland departure" loading="lazy">
+      <div class="day-hero__overlay"></div>
+      <div class="day-hero__badges">
+        <span class="day-hero__day-badge">Day 7</span>
+        <span class="day-hero__region-badge">Farewell Day</span>
+      </div>
+      <div class="day-hero__content">
+        <h3 class="day-hero__title">West Iceland → Home</h3>
+        <div class="day-hero__meta"><span>🚗 ~1.5 hrs to KEF</span><span>✈️ Evening departure</span></div>
+      </div>
+    </div>
+    <div class="day-info-bar">
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">~1.5 hrs</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Flight</span><span class="day-info-bar__value">Keflavík KEF</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Relaxed 🟢</span></div>
+    </div>
+    <div class="day-schedule">
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Hraunfossar — dozens of springs emerge from lava directly into a river (paved walkway)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Barnafoss — the "Children's Waterfall" right next door</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Leisurely drive back toward Reykjavik</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Lunch stop in Borgarnes or along the way</span></div>
+        </div>
+      </div>
+      <div class="schedule-block">
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening</div>
+        <div class="schedule-block__body">
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Keflavík International Airport — evening departure</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Carry Iceland memories home forever 🧡</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="day-photos">
+      <div class="day-photos__item"><img src="images/d7-strip-river.jpg" alt="Iceland river" loading="lazy"></div>
+      <div class="day-photos__item"><img src="images/d7-strip-reykjavik.jpg" alt="Reykjavik" loading="lazy"></div>
+    </div>
+    <div class="elder-note"><div class="elder-note__label">👨‍👩‍👧‍👦 Family Note</div>Light day with no time pressure. Hraunfossar has a paved riverside walkway. Leave by 3 PM latest for comfortable airport arrival.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ HOT SPRINGS ══════════════════ -->
+<section class="springs-section" id="springs">
+  <div class="springs-hero">
+    <img src="images/springs-hero.jpg" alt="Geothermal baths" loading="lazy">
+    <div class="springs-hero__content">
+      <h2 class="springs-hero__title">Hot Springs Guide</h2>
+      <p class="springs-hero__sub">5 geothermal experiences · Wild to world-class</p>
+    </div>
+  </div>
+  <div class="springs-temp-bar">
+    🌡 Temperatures 36–42°C &nbsp;·&nbsp; All accessible in July &nbsp;·&nbsp; Swimsuit essential!
+  </div>
+
+  <!-- Hrunalaug -->
+  <div class="spring-card">
+    <div class="spring-card__img">
+      <img src="images/spring-hrunalaug.jpg" alt="Hrunalaug" loading="lazy">
+    </div>
+    <div class="spring-card__header">
+      <div>
+        <span class="spring-card__day-chip spring-card__day-chip--natural">Day 1 · Natural</span>
+        <h3 class="spring-card__name">Hrunalaug</h3>
+      </div>
+      <span class="spring-card__type spring-card__type--natural">Wild</span>
+    </div>
+    <div class="spring-card__body">
+      <div class="spring-card__stats">
+        <div class="spring-stat"><div class="spring-stat__label">Temperature</div><div class="spring-stat__value">38–40°C</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Access</div><div class="spring-stat__value">★★★★★</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Facilities</div><div class="spring-stat__value">Changing hut</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Walk</div><div class="spring-stat__value">5 min easy</div></div>
+      </div>
+      <p class="spring-card__note">Hidden gem with a stone pool set in a meadow. One of Iceland's most charming natural hot pots — peaceful and uncrowded.</p>
+    </div>
+  </div>
+
+  <!-- Vök Baths -->
+  <div class="spring-card">
+    <div class="spring-card__img">
+      <img src="images/spring-vok.jpg" alt="Vok Baths" loading="lazy">
+    </div>
+    <div class="spring-card__header">
+      <div>
+        <span class="spring-card__day-chip spring-card__day-chip--facility">Day 3 · Facility</span>
+        <h3 class="spring-card__name">Vök Baths</h3>
+      </div>
+      <span class="spring-card__type spring-card__type--facility">Premium</span>
+    </div>
+    <div class="spring-card__body">
+      <div class="spring-card__stats">
+        <div class="spring-stat"><div class="spring-stat__label">Temperature</div><div class="spring-stat__value">38–40°C</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Access</div><div class="spring-stat__value">★★★★★</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Facilities</div><div class="spring-stat__value">Full spa + café</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Walk</div><div class="spring-stat__value">Fully accessible</div></div>
+      </div>
+      <p class="spring-card__note">Floating infinity pools on Lake Urriðavatn with stunning reflection views. One of Iceland's most architecturally beautiful bath facilities.</p>
+    </div>
+  </div>
+
+  <!-- Myvatn Nature Baths -->
+  <div class="spring-card">
+    <div class="spring-card__img">
+      <img src="images/spring-myvatn.jpg" alt="Myvatn Nature Baths" loading="lazy">
+    </div>
+    <div class="spring-card__header">
+      <div>
+        <span class="spring-card__day-chip spring-card__day-chip--facility">Day 4 · Facility</span>
+        <h3 class="spring-card__name">Mývatn Nature Baths</h3>
+      </div>
+      <span class="spring-card__type spring-card__type--facility">Premium</span>
+    </div>
+    <div class="spring-card__body">
+      <div class="spring-card__stats">
+        <div class="spring-stat"><div class="spring-stat__label">Temperature</div><div class="spring-stat__value">36–40°C</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Access</div><div class="spring-stat__value">★★★★★</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Facilities</div><div class="spring-stat__value">Full facilities</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Walk</div><div class="spring-stat__value">Fully accessible</div></div>
+      </div>
+      <p class="spring-card__note">The Blue Lagoon of the north — turquoise mineral-rich waters, far less crowded, and arguably more dramatic setting. Don't miss this one.</p>
+    </div>
+  </div>
+
+  <!-- GeoSea -->
+  <div class="spring-card">
+    <div class="spring-card__img">
+      <img src="images/spring-geosea.jpg" alt="GeoSea baths" loading="lazy">
+    </div>
+    <div class="spring-card__header">
+      <div>
+        <span class="spring-card__day-chip spring-card__day-chip--facility">Day 5 · Facility</span>
+        <h3 class="spring-card__name">GeoSea</h3>
+      </div>
+      <span class="spring-card__type spring-card__type--facility">Premium</span>
+    </div>
+    <div class="spring-card__body">
+      <div class="spring-card__stats">
+        <div class="spring-stat"><div class="spring-stat__label">Temperature</div><div class="spring-stat__value">36–42°C</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Access</div><div class="spring-stat__value">★★★★★</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Facilities</div><div class="spring-stat__value">Premium spa</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Walk</div><div class="spring-stat__value">Fully accessible</div></div>
+      </div>
+      <p class="spring-card__note">Ocean-edge infinity pools overlooking Skjálfandi Bay — whale watching from the warm water. One of Iceland's most uniquely located bath experiences.</p>
+    </div>
+  </div>
+
+  <!-- Fosslaug -->
+  <div class="spring-card">
+    <div class="spring-card__img">
+      <img src="images/spring-fosslaug.jpg" alt="Fosslaug hot spring" loading="lazy">
+    </div>
+    <div class="spring-card__header">
+      <div>
+        <span class="spring-card__day-chip spring-card__day-chip--natural">Day 5 · Natural</span>
+        <h3 class="spring-card__name">Fosslaug</h3>
+      </div>
+      <span class="spring-card__type spring-card__type--natural">Wild</span>
+    </div>
+    <div class="spring-card__body">
+      <div class="spring-card__stats">
+        <div class="spring-stat"><div class="spring-stat__label">Temperature</div><div class="spring-stat__value">39°C</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Access</div><div class="spring-stat__value">★★★★☆</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Facilities</div><div class="spring-stat__value">Basic changing</div></div>
+        <div class="spring-stat"><div class="spring-stat__label">Walk</div><div class="spring-stat__value">5 min roadside</div></div>
+      </div>
+      <p class="spring-card__note">A roadside gem perfect for a sunset soak under the midnight sun. Natural stone-lined pool next to Fossá waterfall — magical atmosphere.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ WHAT TO EXPECT ══════════════════ -->
+<section class="expect-section" id="expect">
+  <div class="expect-hero">
+    <img src="images/aurora-hero.jpg" alt="Iceland midnight sun" loading="lazy">
+    <div class="expect-hero__content">
+      <h2 class="expect-hero__title">What to Expect</h2>
+      <p class="expect-hero__sub">Iceland in July — tips for the family</p>
+    </div>
+  </div>
+
+  <div class="expect-accordion">
+    <div class="expect-item open">
+      <button class="expect-item__trigger" onclick="toggleExpect(this)">
+        <span class="expect-item__icon">☀️</span>
+        <span class="expect-item__label">July Weather</span>
+        <div class="expect-item__chevron"></div>
+      </button>
+      <div class="expect-item__body">
+        <div class="expect-item__content">
+          <ul>
+            <li>Temperatures: 10–18°C — cool but very pleasant for touring</li>
+            <li>Midnight sun — it never fully gets dark in July!</li>
+            <li>Rain is possible any day — always pack waterproof layers</li>
+            <li>Wind can be strong at exposed coastal viewpoints</li>
+            <li>Pack sunscreen — UV is surprisingly strong even through cloud</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="expect-item">
+      <button class="expect-item__trigger" onclick="toggleExpect(this)">
+        <span class="expect-item__icon">👕</span>
+        <span class="expect-item__label">What to Pack</span>
+        <div class="expect-item__chevron"></div>
+      </button>
+      <div class="expect-item__body">
+        <div class="expect-item__content">
+          <ul>
+            <li>Waterproof jacket & trousers — absolutely essential</li>
+            <li>Warm base layers — fleece or merino wool recommended</li>
+            <li>Comfortable walking shoes with grip (no heels!)</li>
+            <li>Swimsuit & quick-dry towel for every geothermal stop</li>
+            <li>Sunglasses — glare from glaciers and water is intense</li>
+            <li>Small daypack for snacks, water, extra layers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="expect-item">
+      <button class="expect-item__trigger" onclick="toggleExpect(this)">
+        <span class="expect-item__icon">🚗</span>
+        <span class="expect-item__label">Road Trip Tips</span>
+        <div class="expect-item__chevron"></div>
+      </button>
+      <div class="expect-item__body">
+        <div class="expect-item__content">
+          <ul>
+            <li>Fill up petrol at every opportunity — stations are sparse</li>
+            <li>Speed limits: 90 km/h highway, 80 km/h gravel roads</li>
+            <li>Watch for sheep on roads — they have right of way!</li>
+            <li>Download offline Google Maps before leaving each city</li>
+            <li>Book geothermal baths in advance — they sell out in July</li>
+            <li>Check road.is for conditions before each day's drive</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="expect-item">
+      <button class="expect-item__trigger" onclick="toggleExpect(this)">
+        <span class="expect-item__icon">👨‍👩‍👧‍👦</span>
+        <span class="expect-item__label">Family Notes</span>
+        <div class="expect-item__chevron"></div>
+      </button>
+      <div class="expect-item__body">
+        <div class="expect-item__content">
+          <ul>
+            <li>No F-roads (rough 4WD tracks) anywhere in this itinerary</li>
+            <li>All hotels selected for comfort and accessibility</li>
+            <li>Geothermal baths are therapeutic — great for joints</li>
+            <li>Daily driving kept under 4 hours maximum</li>
+            <li>Pace is flexible — optional stops can be skipped easily</li>
+            <li>Rest days built in at Hotel Glymur (2 nights)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="expect-item">
+      <button class="expect-item__trigger" onclick="toggleExpect(this)">
+        <span class="expect-item__icon">🍽️</span>
+        <span class="expect-item__label">Food & Practical</span>
+        <div class="expect-item__chevron"></div>
+      </button>
+      <div class="expect-item__body">
+        <div class="expect-item__content">
+          <ul>
+            <li>Grocery shops (Krónan, Bónus) are affordable — stock up daily</li>
+            <li>Lamb, fish & skyr are local must-tries</li>
+            <li>Iceland is near-cashless — card accepted everywhere</li>
+            <li>N1 petrol stations have great fast food (try Pylsur hot dogs!)</li>
+            <li>Most restaurants can accommodate dietary requirements</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="footer">
+  <p class="footer__title">Safe travels, family. 🧡</p>
+  <div class="footer__divider"></div>
+  <p class="footer__sub">
+    <span class="footer__gold">Iceland Summer Road Trip 2026</span><br>
+    Family Adventure · Ring Road & Snæfellsnes<br>
+    <br>
+    8 days · ~1,400 km<br>
+    July 2026 · Elder-friendly pacing throughout
+  </p>
+</footer>
+
+</div><!-- .brochure -->
+
+<!-- Scroll to top button -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<script>
+// ── Day tab switching ──────────────────────────────
+const navBtns = document.querySelectorAll('.day-nav-btn');
+const panels  = document.querySelectorAll('.day-panel');
+
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const day = btn.dataset.day;
+    navBtns.forEach(b => b.classList.remove('active'));
+    panels.forEach(p  => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('day-' + day).classList.add('active');
+    // Scroll nav button into view
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  });
+});
+
+// ── Accordion ─────────────────────────────────────
+function toggleExpect(btn) {
+  const item = btn.closest('.expect-item');
+  item.classList.toggle('open');
+}
+
+// ── Scroll-to-top visibility ──────────────────────
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+
+// ── Lazy image fade-in ────────────────────────────
+document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+  img.style.opacity = '0';
+  img.style.transition = 'opacity 0.4s ease';
+  if (img.complete) {
+    img.style.opacity = '1';
+  } else {
+    img.addEventListener('load', () => { img.style.opacity = '1'; });
+    img.addEventListener('error', () => {
+      // Graceful fallback — show a placeholder colour
+      img.style.opacity = '0.3';
+      img.style.filter = 'grayscale(1)';
+    });
+  }
+});
+
+
+// ── Floating drawer navigation ───────────────────────────────────────────────
+function openDrawer() {
+  document.getElementById('navDrawer').classList.add('open');
+  var ov = document.getElementById('navOverlay');
+  ov.style.display = 'block';
+  requestAnimationFrame(function(){ ov.classList.add('visible'); });
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('navDrawer').classList.remove('open');
+  var ov = document.getElementById('navOverlay');
+  ov.classList.remove('visible');
+  setTimeout(function(){ ov.style.display = 'none'; }, 280);
+  document.body.style.overflow = '';
+}
+function drawerNav(id) {
+  closeDrawer();
+  setTimeout(function() {
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 320);
+  document.querySelectorAll('.nav-drawer__link').forEach(function(l) {
+    l.classList.toggle('active', l.dataset.section === id);
+  });
+}
+(function() {
+  var startX = 0;
+  var drawer = document.getElementById('navDrawer');
+  drawer.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+  drawer.addEventListener('touchend',   function(e){ if (startX - e.changedTouches[0].clientX > 60) closeDrawer(); }, {passive:true});
+})();
+var _secs = ['cover','route','map','itinerary','springs','expect'];
+window.addEventListener('scroll', function() {
+  var cur = 'cover';
+  for (var i = 0; i < _secs.length; i++) {
+    var el = document.getElementById(_secs[i]);
+    if (el && el.getBoundingClientRect().top <= 80) cur = _secs[i];
+  }
+  document.querySelectorAll('.nav-drawer__link[data-section]').forEach(function(l){
+    l.classList.toggle('active', l.dataset.section === cur);
+  });
+}, {passive:true});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.6.0/leaflet.polylineDecorator.min.js"></script>
+<script>
+(function() {
+  var map = L.map('tripMap', { zoomControl: true, scrollWheelZoom: false }).setView([65.0, -18.5], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 17
+  }).addTo(map);
+
+  function pin(color) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="width:14px;height:14px;border-radius:50%;background:' + color + ';border:2px solid rgba(255,255,255,0.85);box-shadow:0 1px 4px rgba(0,0,0,0.5);"></div>',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+      popupAnchor: [0, -10]
+    });
+  }
+
+  var stops = [
+    // D0 – Reykjavik
+    [64.1471, -21.9266, 'D0 · Astro Hverfisgata, Reykjavik', '#c8a84b'],
+    // D1 – Golden Circle + South Coast
+    [64.2559, -21.1296, 'D1 · Þingvellir National Park', '#4890d9'],
+    [64.3138, -20.3021, 'D1 · Geysir (Strokkur)', '#4890d9'],
+    [64.3278, -20.1218, 'D1 · Gullfoss', '#4890d9'],
+    [64.0167, -20.1833, 'D1 · Hrunalaug Hot Pot', '#4890d9'],
+    [63.6156, -19.9886, 'D1 · Seljalandsfoss', '#4890d9'],
+    [63.4188, -18.9998, 'D1 · Black Beach Farm, Vík (Hotel)', '#4890d9'],
+    // D2 – South Coast to Höfn
+    [63.5322, -19.5107, 'D2 · Skógafoss', '#2d7a4a'],
+    [63.4044, -19.0455, 'D2 · Reynisfjara Black Beach', '#2d7a4a'],
+    [63.7733, -18.1728, 'D2 · Fjaðrárgljúfur Canyon', '#2d7a4a'],
+    [64.0784, -16.2306, 'D2 · Jökulsárlón Glacier Lagoon', '#2d7a4a'],
+    [64.0440, -16.1781, 'D2 · Diamond Beach', '#2d7a4a'],
+    [64.2522, -15.2122, 'D2 · Hotel Smyrlabjörg (near Höfn)', '#2d7a4a'],
+    // D3 – East Fjords
+    [64.6563, -14.2819, 'D3 · Djúpivogur', '#9b5de5'],
+    [65.2597, -13.9862, 'D3 · Seyðisfjörður', '#9b5de5'],
+    [65.2736, -14.3952, 'D3 · Vök Baths, Egilsstaðir', '#9b5de5'],
+    // D4 – Canyon + Mývatn
+    [65.2022, -15.1697, 'D4 · Stuðlagil Canyon', '#e07030'],
+    [65.6417, -16.8200, 'D4 · Hverir (mud pools)', '#e07030'],
+    [65.6013, -16.9145, 'D4 · Dimmuborgir Lava Fields', '#e07030'],
+    [65.6367, -16.9017, 'D4 · Mývatn Nature Baths', '#e07030'],
+    // D5 – Húsavík to Hotel Glymur
+    [65.6826, -17.5500, 'D5 · Goðafoss', '#00b4d8'],
+    [66.0434, -17.3390, 'D5 · Húsavík (whale watching)', '#00b4d8'],
+    [66.0400, -17.3324, 'D5 · GeoSea Geothermal Baths', '#00b4d8'],
+    [65.3467, -19.3783, 'D5 · Fosslaug Natural Hot Spring', '#00b4d8'],
+    [64.4017, -21.6433, 'D5–6 · Hotel Glymur', '#00b4d8'],
+    // D6 – Snæfellsnes
+    [64.9417, -23.3005, 'D6 · Kirkjufell & Kirkjufellsfoss', '#f72585'],
+    [64.8280, -23.7753, 'D6 · Snæfellsjökull Glacier Volcano', '#f72585'],
+    [64.7657, -23.6231, 'D6 · Arnarstapi Harbour', '#f72585'],
+    // D7 – West Iceland + KEF
+    [64.7128, -21.1575, 'D7 · Hraunfossar & Barnafoss', '#adb5bd'],
+    [63.9850, -22.6056, 'D7 · Keflavík Airport (KEF)', '#adb5bd']
+  ];
+
+  stops.forEach(function(s) {
+    L.marker([s[0], s[1]], { icon: pin(s[3]) })
+      .addTo(map)
+      .bindPopup('<strong style="font-size:13px;">' + s[2] + '</strong>', { maxWidth: 220 });
+  });
+
+  // Route polyline — driving order D0 → D1 → D2 → D3 → D4 → D5 → D6 → D7
+  var routeCoords = [
+    [64.1471, -21.9266], // Reykjavik
+    [64.2559, -21.1296], // Þingvellir
+    [64.3138, -20.3021], // Geysir
+    [64.3278, -20.1218], // Gullfoss
+    [64.0167, -20.1833], // Hrunalaug
+    [63.6156, -19.9886], // Seljalandsfoss
+    [63.4188, -18.9998], // Vík
+    [63.5322, -19.5107], // Skógafoss
+    [63.4044, -19.0455], // Reynisfjara
+    [63.7733, -18.1728], // Fjaðrárgljúfur
+    [64.0784, -16.2306], // Jökulsárlón
+    [64.0440, -16.1781], // Diamond Beach
+    [64.2522, -15.2122], // Höfn
+    [64.6563, -14.2819], // Djúpivogur
+    [65.2597, -13.9862], // Seyðisfjörður
+    [65.2736, -14.3952], // Egilsstaðir
+    [65.2022, -15.1697], // Stuðlagil
+    [65.6417, -16.8200], // Hverir
+    [65.6013, -16.9145], // Dimmuborgir
+    [65.6367, -16.9017], // Mývatn Baths
+    [65.6826, -17.5500], // Goðafoss
+    [66.0434, -17.3390], // Húsavík
+    [66.0400, -17.3324], // GeoSea
+    [65.3467, -19.3783], // Fosslaug
+    [64.4017, -21.6433], // Hotel Glymur
+    [64.9417, -23.3005], // Kirkjufell
+    [64.8280, -23.7753], // Snæfellsjökull
+    [64.7657, -23.6231], // Arnarstapi
+    [64.7128, -21.1575], // Hraunfossar
+    [63.9850, -22.6056], // KEF
+    [64.1471, -21.9266]  // back to Reykjavik
+  ];
+
+  var routeLine = L.polyline(routeCoords, {
+    color: '#c8a84b',
+    weight: 2.5,
+    opacity: 0.75,
+    dashArray: '6, 5'
+  }).addTo(map);
+
+  L.polylineDecorator(routeLine, {
+    patterns: [
+      {
+        offset: '12%',
+        repeat: '18%',
+        symbol: L.Symbol.arrowHead({
+          pixelSize: 10,
+          polygon: false,
+          pathOptions: { color: '#c8a84b', weight: 2.5, opacity: 0.9 }
+        })
+      }
+    ]
+  }).addTo(map);
+})();
+</script>
+</body>
+</html>

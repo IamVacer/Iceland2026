@@ -2143,6 +2143,7 @@ window.addEventListener('scroll', function() {
 }, {passive:true});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.6.0/leaflet.polylineDecorator.min.js"></script>
 <script>
 (function() {
   var map = L.map('tripMap', { zoomControl: true, scrollWheelZoom: false }).setView([65.0, -18.5], 6);
@@ -2207,6 +2208,62 @@ window.addEventListener('scroll', function() {
       .addTo(map)
       .bindPopup('<strong style="font-size:13px;">' + s[2] + '</strong>', { maxWidth: 220 });
   });
+
+  // Route polyline — driving order D0 → D1 → D2 → D3 → D4 → D5 → D6 → D7
+  var routeCoords = [
+    [64.1471, -21.9266], // Reykjavik
+    [64.2559, -21.1296], // Þingvellir
+    [64.3138, -20.3021], // Geysir
+    [64.3278, -20.1218], // Gullfoss
+    [64.0167, -20.1833], // Hrunalaug
+    [63.6156, -19.9886], // Seljalandsfoss
+    [63.4188, -18.9998], // Vík
+    [63.5322, -19.5107], // Skógafoss
+    [63.4044, -19.0455], // Reynisfjara
+    [63.7733, -18.1728], // Fjaðrárgljúfur
+    [64.0784, -16.2306], // Jökulsárlón
+    [64.0440, -16.1781], // Diamond Beach
+    [64.2522, -15.2122], // Höfn
+    [64.6563, -14.2819], // Djúpivogur
+    [65.2597, -13.9862], // Seyðisfjörður
+    [65.2736, -14.3952], // Egilsstaðir
+    [65.2022, -15.1697], // Stuðlagil
+    [65.6417, -16.8200], // Hverir
+    [65.6013, -16.9145], // Dimmuborgir
+    [65.6367, -16.9017], // Mývatn Baths
+    [65.6826, -17.5500], // Goðafoss
+    [66.0434, -17.3390], // Húsavík
+    [66.0400, -17.3324], // GeoSea
+    [65.3467, -19.3783], // Fosslaug
+    [64.4017, -21.6433], // Hotel Glymur
+    [64.9417, -23.3005], // Kirkjufell
+    [64.8280, -23.7753], // Snæfellsjökull
+    [64.7657, -23.6231], // Arnarstapi
+    [64.7128, -21.1575], // Hraunfossar
+    [63.9850, -22.6056], // KEF
+    [64.1471, -21.9266]  // back to Reykjavik
+  ];
+
+  var routeLine = L.polyline(routeCoords, {
+    color: '#c8a84b',
+    weight: 2.5,
+    opacity: 0.75,
+    dashArray: '6, 5'
+  }).addTo(map);
+
+  L.polylineDecorator(routeLine, {
+    patterns: [
+      {
+        offset: '12%',
+        repeat: '18%',
+        symbol: L.Symbol.arrowHead({
+          pixelSize: 10,
+          polygon: false,
+          pathOptions: { color: '#c8a84b', weight: 2.5, opacity: 0.9 }
+        })
+      }
+    ]
+  }).addTo(map);
 })();
 </script>
 </body>
