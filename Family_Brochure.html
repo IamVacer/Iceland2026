@@ -2142,9 +2142,7 @@ window.addEventListener('scroll', function() {
   });
 }, {passive:true});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-polylinedecorator/1.6.0/leaflet.polylineDecorator.min.js"></script>
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script><script>
 (function() {
   var map = L.map('tripMap', { zoomControl: true, scrollWheelZoom: false }).setView([65.0, -18.5], 6);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -2251,19 +2249,36 @@ window.addEventListener('scroll', function() {
     dashArray: '6, 5'
   }).addTo(map);
 
-  L.polylineDecorator(routeLine, {
-    patterns: [
-      {
-        offset: '12%',
-        repeat: '18%',
-        symbol: L.Symbol.arrowHead({
-          pixelSize: 10,
-          polygon: false,
-          pathOptions: { color: '#c8a84b', weight: 2.5, opacity: 0.9 }
-        })
-      }
-    ]
-  }).addTo(map);
+  // Arrow markers — custom bearing-based, no plugin needed
+  function calcBearing(from, to) {
+    var lat1 = from[0] * Math.PI / 180, lat2 = to[0] * Math.PI / 180;
+    var dLon = (to[1] - from[1]) * Math.PI / 180;
+    var y = Math.sin(dLon) * Math.cos(lat2);
+    var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+    return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  }
+  function midpoint(a, b) { return [(a[0]+b[0])/2, (a[1]+b[1])/2]; }
+  function arrowAt(from, to) {
+    var deg = calcBearing(from, to);
+    L.marker(midpoint(from, to), {
+      icon: L.divIcon({
+        className: '',
+        html: '<div style="transform:rotate('+deg+'deg);color:#c8a84b;font-size:20px;line-height:1;text-shadow:0 0 4px rgba(0,0,0,0.6);">▶</div>',
+        iconSize: [20,20], iconAnchor: [10,10]
+      }),
+      interactive: false
+    }).addTo(map);
+  }
+
+  arrowAt([64.1471,-21.9266], [64.2559,-21.1296]); // Reykjavik → Golden Circle
+  arrowAt([64.0440,-16.1781], [64.2522,-15.2122]); // Diamond Beach → Höfn
+  arrowAt([64.2522,-15.2122], [64.6563,-14.2819]); // Höfn → East Fjords
+  arrowAt([65.2736,-14.3952], [65.2022,-15.1697]); // Egilsstaðir → Stuðlagil
+  arrowAt([65.6367,-16.9017], [65.6826,-17.5500]); // Mývatn → Goðafoss
+  arrowAt([66.0434,-17.3390], [65.3467,-19.3783]); // Húsavík → Fosslaug
+  arrowAt([64.4017,-21.6433], [64.9417,-23.3005]); // Hotel Glymur → Snæfellsnes
+  arrowAt([64.7657,-23.6231], [64.7128,-21.1575]); // Arnarstapi → Hraunfossar
+  arrowAt([64.7128,-21.1575], [63.9850,-22.6056]); // Hraunfossar → KEF
 })();
 </script>
 </body>
