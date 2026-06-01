@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
 /* ═══════════════════════════════════════════════
    DESIGN TOKENS
@@ -790,6 +791,42 @@ img { display: block; width: 100%; object-fit: cover; }
 .img-wrap img { position: relative; z-index: 1; }
 .img-wrap img.loaded + .shimmer { display: none; }
 
+/* ═══════════════════════════════════════════════
+   MAP SECTION
+═══════════════════════════════════════════════ */
+.map-section { background: var(--ink); }
+#tripMap {
+  height: 420px;
+  width: 100%;
+  border-top: 1px solid rgba(200,168,75,0.2);
+  border-bottom: 1px solid rgba(200,168,75,0.2);
+}
+.map-legend {
+  padding: 10px 16px 18px;
+  background: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.map-legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; color: var(--mist);
+}
+.map-legend-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+.map-hint {
+  padding: 8px 16px 16px;
+  font-size: 13px; color: rgba(107,143,168,0.75);
+  font-style: italic; line-height: 1.6;
+  background: var(--ink);
+}
+@media (min-width: 768px) {
+  #tripMap { height: 540px; }
+}
+
 /* Desktop centring */
 @media (min-width: 480px) {
   .day-nav { padding: 14px 20px; }
@@ -1205,6 +1242,9 @@ body { font-size: 20px; }
     <button class="nav-drawer__link"        data-section="route"     onclick="drawerNav('route')">
       <span class="nav-drawer__icon">🗺</span><span class="nav-drawer__label">Route Overview</span>
     </button>
+    <button class="nav-drawer__link"        data-section="map"       onclick="drawerNav('map')">
+      <span class="nav-drawer__icon">📍</span><span class="nav-drawer__label">Trip Map</span>
+    </button>
     <button class="nav-drawer__link"        data-section="itinerary" onclick="drawerNav('itinerary')">
       <span class="nav-drawer__icon">📅</span><span class="nav-drawer__label">Day by Day</span>
     </button>
@@ -1232,7 +1272,6 @@ body { font-size: 20px; }
     <p class="cover__year">2026</p>
     <div class="cover__badges">
       <span class="badge badge--gold">8 Days</span>
-      <span class="badge">5 Geothermal Baths</span>
       <span class="badge">Ring Road Loop</span>
     </div>
     <p class="cover__tagline">
@@ -1276,7 +1315,7 @@ body { font-size: 20px; }
   </div>
   <div class="route-map__info">
     <div class="route-map__note">
-      🗺 <strong style="color:var(--gold)">Clockwise loop</strong> — Reykjavik → Golden Circle → South Coast → East Fjords → Mývatn → Húsavík → Snæfellsnes → Reykjavik. No rough F-roads. Maximum 4 hrs driving per day.
+      🗺 <strong style="color:var(--gold)">Anti-clockwise loop</strong> — Reykjavik → Snæfellsnes → Húsavík → Mývatn → East Fjords → South Coast → Golden Circle → Reykjavik. No rough F-roads. Maximum 4 hrs driving per day.
     </div>
   </div>
 
@@ -1287,7 +1326,7 @@ body { font-size: 20px; }
   <div class="accom-grid">
     <div class="accom-card">
       <div class="accom-card__day"><span class="accom-card__day-label">D0</span><span class="accom-card__nights">1 night</span></div>
-      <span class="accom-card__name">Reykjavik Hotel</span>
+      <span class="accom-card__name">Astro Hverfisgata</span>
     </div>
     <div class="accom-card">
       <div class="accom-card__day"><span class="accom-card__day-label">D1</span><span class="accom-card__nights">1 night</span></div>
@@ -1310,6 +1349,29 @@ body { font-size: 20px; }
       <span class="accom-card__name">Hotel Glymur</span>
     </div>
   </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════ MAP ══════════════════ -->
+<section class="map-section" id="map">
+  <div class="section-header">
+    <p class="section-header__eyebrow">All Stops</p>
+    <h2 class="section-header__title">Trip Map</h2>
+    <p class="section-header__sub">Anti-clockwise loop · Tap any pin for details</p>
+  </div>
+  <div id="tripMap"></div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#c8a84b"></div>D0 Reykjavik</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#4890d9"></div>D1 Golden Circle</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#2d7a4a"></div>D2 South Coast</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#9b5de5"></div>D3 East Fjords</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#e07030"></div>D4 Mývatn</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#00b4d8"></div>D5 Húsavík</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#f72585"></div>D6 Snæfellsnes</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#adb5bd"></div>D7 Departure</div>
+  </div>
+  <p class="map-hint">📍 Pinch to zoom · Tap a pin to see the stop name · Pan to explore</p>
 </section>
 
 <div class="divider"></div>
@@ -1349,36 +1411,23 @@ body { font-size: 20px; }
       <div class="day-hero__content">
         <h3 class="day-hero__title">Arrival — Reykjavik</h3>
         <div class="day-hero__meta">
-          <span>🚗 City only</span>
-          <span>🏨 Reykjavik Hotel</span>
+          <span>✈️ Evening arrival</span>
+          <span>🏨 Astro Hverfisgata</span>
         </div>
       </div>
     </div>
     <div class="day-info-bar">
-      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">Minimal</span></div>
-      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Reykjavik</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Drive</span><span class="day-info-bar__value">None</span></div>
+      <div class="day-info-bar__item"><span class="day-info-bar__label">Hotel</span><span class="day-info-bar__value">Astro Hverfisgata</span></div>
       <div class="day-info-bar__item"><span class="day-info-bar__label">Pace</span><span class="day-info-bar__value">Easy 🟢</span></div>
     </div>
     <div class="day-schedule">
       <div class="schedule-block">
-        <div class="schedule-block__header schedule-block__header--morning"><span class="schedule-block__icon">🌅</span> Morning</div>
+        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening — Arrival</div>
         <div class="schedule-block__body">
-          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Check in and rest after flight</span></div>
-          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Stroll Laugavegur — Reykjavik's main shopping street</span></div>
-        </div>
-      </div>
-      <div class="schedule-block">
-        <div class="schedule-block__header schedule-block__header--afternoon"><span class="schedule-block__icon">☀️</span> Afternoon</div>
-        <div class="schedule-block__body">
-          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Hallgrímskirkja church — elevator to top for city views</span></div>
-          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--green"></div><span>Harpa Concert Hall — stunning architecture, free to enter</span></div>
-        </div>
-      </div>
-      <div class="schedule-block">
-        <div class="schedule-block__header schedule-block__header--evening"><span class="schedule-block__icon">🌙</span> Evening</div>
-        <div class="schedule-block__body">
-          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Sky Lagoon — first geothermal experience <span class="optional">(optional)</span></span></div>
-          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Dinner in the old harbour district</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--gold"></div><span>Land at Keflavík, drive to Reykjavik (~45 min)</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--dark"></div><span>Check in at Astro Hverfisgata</span></div>
+          <div class="schedule-item"><div class="schedule-item__dot schedule-item__dot--blue"></div><span>Stroll Laugavegur — Reykjavik's main shopping street, lined with cafés and boutiques</span></div>
         </div>
       </div>
     </div>
@@ -1387,7 +1436,7 @@ body { font-size: 20px; }
       <div class="day-photos__item"><img src="images/d0-strip-harpa.jpg" alt="Harpa" loading="lazy"></div>
       <div class="day-photos__item"><img src="images/d0-strip-reykjavik.jpg" alt="Reykjavik" loading="lazy"></div>
     </div>
-    <div class="elder-note"><div class="elder-note__label">👴 Elder-Friendly Note</div>City walking is flat and easy. Hallgrímskirkja has an elevator to the observation deck — no stairs needed.</div>
+    <div class="elder-note"><div class="elder-note__label">👴 Elder-Friendly Note</div>Laugavegur is flat and pedestrian-friendly — a gentle evening stroll is perfect after a long flight. No rush tonight.</div>
   </div>
 
   <!-- DAY 1 -->
@@ -1994,7 +2043,7 @@ body { font-size: 20px; }
     <span class="footer__gold">Iceland Summer Road Trip 2026</span><br>
     Family Adventure · Ring Road & Snæfellsnes<br>
     <br>
-    8 days · 5 geothermal baths · ~1,400 km<br>
+    8 days · ~1,400 km<br>
     July 2026 · Elder-friendly pacing throughout
   </p>
 </footer>
@@ -2081,7 +2130,7 @@ function drawerNav(id) {
   drawer.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
   drawer.addEventListener('touchend',   function(e){ if (startX - e.changedTouches[0].clientX > 60) closeDrawer(); }, {passive:true});
 })();
-var _secs = ['cover','route','itinerary','springs','expect'];
+var _secs = ['cover','route','map','itinerary','springs','expect'];
 window.addEventListener('scroll', function() {
   var cur = 'cover';
   for (var i = 0; i < _secs.length; i++) {
@@ -2092,6 +2141,73 @@ window.addEventListener('scroll', function() {
     l.classList.toggle('active', l.dataset.section === cur);
   });
 }, {passive:true});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function() {
+  var map = L.map('tripMap', { zoomControl: true, scrollWheelZoom: false }).setView([65.0, -18.5], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 17
+  }).addTo(map);
+
+  function pin(color) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="width:14px;height:14px;border-radius:50%;background:' + color + ';border:2px solid rgba(255,255,255,0.85);box-shadow:0 1px 4px rgba(0,0,0,0.5);"></div>',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+      popupAnchor: [0, -10]
+    });
+  }
+
+  var stops = [
+    // D0 – Reykjavik
+    [64.1471, -21.9266, 'D0 · Astro Hverfisgata, Reykjavik', '#c8a84b'],
+    // D1 – Golden Circle + South Coast
+    [64.2559, -21.1296, 'D1 · Þingvellir National Park', '#4890d9'],
+    [64.3138, -20.3021, 'D1 · Geysir (Strokkur)', '#4890d9'],
+    [64.3278, -20.1218, 'D1 · Gullfoss', '#4890d9'],
+    [64.0167, -20.1833, 'D1 · Hrunalaug Hot Pot', '#4890d9'],
+    [63.6156, -19.9886, 'D1 · Seljalandsfoss', '#4890d9'],
+    [63.4188, -18.9998, 'D1 · Black Beach Farm, Vík (Hotel)', '#4890d9'],
+    // D2 – South Coast to Höfn
+    [63.5322, -19.5107, 'D2 · Skógafoss', '#2d7a4a'],
+    [63.4044, -19.0455, 'D2 · Reynisfjara Black Beach', '#2d7a4a'],
+    [63.7733, -18.1728, 'D2 · Fjaðrárgljúfur Canyon', '#2d7a4a'],
+    [64.0784, -16.2306, 'D2 · Jökulsárlón Glacier Lagoon', '#2d7a4a'],
+    [64.0440, -16.1781, 'D2 · Diamond Beach', '#2d7a4a'],
+    [64.2522, -15.2122, 'D2 · Hotel Smyrlabjörg (near Höfn)', '#2d7a4a'],
+    // D3 – East Fjords
+    [64.6563, -14.2819, 'D3 · Djúpivogur', '#9b5de5'],
+    [65.2597, -13.9862, 'D3 · Seyðisfjörður', '#9b5de5'],
+    [65.2736, -14.3952, 'D3 · Vök Baths, Egilsstaðir', '#9b5de5'],
+    // D4 – Canyon + Mývatn
+    [65.2022, -15.1697, 'D4 · Stuðlagil Canyon', '#e07030'],
+    [65.6417, -16.8200, 'D4 · Hverir (mud pools)', '#e07030'],
+    [65.6013, -16.9145, 'D4 · Dimmuborgir Lava Fields', '#e07030'],
+    [65.6367, -16.9017, 'D4 · Mývatn Nature Baths', '#e07030'],
+    // D5 – Húsavík to Hotel Glymur
+    [65.6826, -17.5500, 'D5 · Goðafoss', '#00b4d8'],
+    [66.0434, -17.3390, 'D5 · Húsavík (whale watching)', '#00b4d8'],
+    [66.0400, -17.3324, 'D5 · GeoSea Geothermal Baths', '#00b4d8'],
+    [65.3467, -19.3783, 'D5 · Fosslaug Natural Hot Spring', '#00b4d8'],
+    [64.4017, -21.6433, 'D5–6 · Hotel Glymur', '#00b4d8'],
+    // D6 – Snæfellsnes
+    [64.9417, -23.3005, 'D6 · Kirkjufell & Kirkjufellsfoss', '#f72585'],
+    [64.8280, -23.7753, 'D6 · Snæfellsjökull Glacier Volcano', '#f72585'],
+    [64.7657, -23.6231, 'D6 · Arnarstapi Harbour', '#f72585'],
+    // D7 – West Iceland + KEF
+    [64.7128, -21.1575, 'D7 · Hraunfossar & Barnafoss', '#adb5bd'],
+    [63.9850, -22.6056, 'D7 · Keflavík Airport (KEF)', '#adb5bd']
+  ];
+
+  stops.forEach(function(s) {
+    L.marker([s[0], s[1]], { icon: pin(s[3]) })
+      .addTo(map)
+      .bindPopup('<strong style="font-size:13px;">' + s[2] + '</strong>', { maxWidth: 220 });
+  });
+})();
 </script>
 </body>
 </html>
