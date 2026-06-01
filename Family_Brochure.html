@@ -794,7 +794,12 @@ img { display: block; width: 100%; object-fit: cover; }
 /* ═══════════════════════════════════════════════
    MAP SECTION
 ═══════════════════════════════════════════════ */
-.map-section { background: var(--ink); }
+.map-section {
+  background: var(--ink);
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
 #tripMap {
   height: 420px;
   width: 100%;
@@ -2102,6 +2107,7 @@ document.querySelectorAll('img[loading="lazy"]').forEach(img => {
 // ── Floating drawer navigation ───────────────────────────────────────────────
 function openDrawer() {
   document.getElementById('navDrawer').classList.add('open');
+  document.getElementById('navFab').style.visibility = 'hidden';
   var ov = document.getElementById('navOverlay');
   ov.style.display = 'block';
   requestAnimationFrame(function(){ ov.classList.add('visible'); });
@@ -2109,6 +2115,7 @@ function openDrawer() {
 }
 function closeDrawer() {
   document.getElementById('navDrawer').classList.remove('open');
+  document.getElementById('navFab').style.visibility = 'visible';
   var ov = document.getElementById('navOverlay');
   ov.classList.remove('visible');
   setTimeout(function(){ ov.style.display = 'none'; }, 280);
